@@ -66,12 +66,30 @@
 (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
 (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line)
 
+;; Flycheck config
+
+(straight-use-package 'flycheck)
+(global-flycheck-mode)
+(defun toggle-flycheck-error-buffer ()
+  "toggle a flycheck error buffer."
+  (interactive)
+  (if (string-match-p "Flycheck errors" (format "%s" (window-list)))
+      (dolist (w (window-list))
+	(when (string-match-p "*Flycheck errors*" (buffer-name (window-buffer w)))
+	  (delete-window w)
+	  ))
+    (flycheck-list-errors)
+    )
+  )
+(global-set-key (kbd "M-4") 'toggle-flycheck-error-buffer)
+
 ;; Projectile config
 (straight-use-package 'projectile)
 (straight-use-package 'counsel-projectile)
 (projectile-global-mode)
 (evil-leader/set-key "pf" 'counsel-projectile-find-file)
 (evil-leader/set-key "pp" 'counsel-projectile-switch-project)
+(evil-leader/set-key "ph" 'projectile--find-other-file)
 
 ;; Neotree config
 (straight-use-package 'neotree)
@@ -98,6 +116,15 @@
 
 ;; C++ config
 (straight-use-package 'rtags)
+(straight-use-package 'flycheck-rtags)
+(straight-use-package 'company-rtags)
+(straight-use-package 'ivy-rtags)
+(require 'rtags)
+(require 'flycheck-rtags)
+(require 'company-rtags)
+(require 'ivy-rtags)
+
+(setq-default rtags-display-result-backend 'ivy)
 (setq-default rtags-completions-enabled t)
 (add-to-list 'company-backends 'company-rtags)
 (defun rdm-restart ()
@@ -108,3 +135,11 @@
 )
 (evil-leader/set-key "rr" 'rdm-restart)
 (rdm-restart)
+(add-hook 'c-mode-common-hook (lambda ()
+				(flycheck-select-checker 'rtags)
+				(setq-local flycheck-highlighting-mode nil) ;; RTags creates more accurate overlays.
+				(evil-leader/set-key "ff" 'rtags-find-symbol-at-point)
+				(evil-leader/set-key "fr" 'rtags-rename-symbol)
+				(evil-leader/set-key "fu" 'rtags-find-references-at-point)
+				(evil-leader/set-key "fe" 'rtags-fixit)
+				))
