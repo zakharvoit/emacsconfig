@@ -55,8 +55,8 @@
 (straight-use-package 'ivy)
 (ivy-mode 1)
 
-(define-key ivy-mode-map (kbd "C-j") 'ivy-next-line)
-(define-key ivy-mode-map (kbd "C-k") 'ivy-previous-line)
+(define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
+(define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line)
 
 ;; Projectile config
 (straight-use-package 'projectile)
@@ -64,6 +64,26 @@
 (projectile-global-mode)
 (evil-leader/set-key "pf" 'counsel-projectile-find-file)
 (evil-leader/set-key "pp" 'counsel-projectile-switch-project)
+
+;; Neotree config
+(straight-use-package 'neotree)
+(evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+(evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+(evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+
+(defun neotree-open-project-dir ()
+  "Open NeoTree using the projectile root."
+  (interactive)
+  (let ((project-dir (projectile-project-root))
+	(file-name (buffer-file-name)))
+    (neotree-toggle)
+    (if project-dir
+	(if (neo-global--window-exists-p)
+	    (progn
+	      (neotree-dir project-dir)
+	      (neotree-find file-name))))))
+
+(global-set-key (kbd "M-1") 'neotree-open-project-dir)
 
 ;; Emacs lisp mode
 (evil-leader/set-key-for-mode 'emacs-lisp-mode "e" 'eval-region)
