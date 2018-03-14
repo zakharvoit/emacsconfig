@@ -19,8 +19,7 @@
 (evil-leader/set-leader "<SPC>")
 
 ;; Themes and colors config
-(straight-use-package 'zerodark-theme)
-(load-theme 'zerodark t)
+(load-theme 'peacock-contrast t)
 
 ;; Some common global configs
 (setq-default visible-bell nil)
