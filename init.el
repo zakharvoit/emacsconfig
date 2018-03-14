@@ -29,6 +29,15 @@
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 
+;; Unsetting weird default keybindings
+(global-unset-key (kbd "C-j"))
+(global-unset-key (kbd "C-k"))
+
+;; Emacs dashboard config
+(straight-use-package 'dashboard)
+(setq-default dashboard-startup-banner nil)
+(dashboard-setup-startup-hook)
+
 ;; General autocomplete config
 (straight-use-package 'company)
 (straight-use-package 'company-quickhelp)
@@ -36,13 +45,22 @@
 (company-quickhelp-mode)
 (setq-default company-idle-delay 0.1)
 
+(define-key text-mode-map (kbd "C-j") 'company-select-next)
+(define-key text-mode-map (kbd "C-k") 'company-select-previous)
+
 ;; Ivy config
 (straight-use-package 'ivy)
 (ivy-mode 1)
 
+;; (define-key ivy-mode-map (kbd "C-j") 'ivy-next-line)
+;; (define-key ivy-mode-map (kbd "C-k") 'ivy-previous-line)
+
 ;; Projectile config
 (straight-use-package 'projectile)
+(straight-use-package 'counsel-projectile)
 (projectile-global-mode)
+(evil-leader/set-key "pf" 'counsel-projectile-find-file)
+(evil-leader/set-key "pp" 'counsel-projectile-switch-project)
 
 ;; Emacs lisp mode
 (evil-leader/set-key-for-mode 'emacs-lisp-mode "e" 'eval-region)
