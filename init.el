@@ -111,6 +111,17 @@
 
 (global-set-key (kbd "M-1") 'neotree-open-project-dir)
 
+;; Git config
+(straight-use-package 'git-gutter)
+(straight-use-package 'magit)
+(straight-use-package 'evil-magit)
+(require 'git-gutter)
+(require 'magit)
+(require 'evil-magit)
+(global-git-gutter-mode t)
+
+(evil-leader/set-key "gg" 'magit-status);
+
 ;; Emacs lisp mode
 (evil-leader/set-key-for-mode 'emacs-lisp-mode "e" 'eval-region)
 
