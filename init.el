@@ -28,10 +28,6 @@
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 
-;; Unsetting weird default keybindings
-(global-unset-key (kbd "C-j"))
-(global-unset-key (kbd "C-k"))
-
 ;; Emacs dashboard config
 (straight-use-package 'dashboard)
 (setq-default dashboard-startup-banner nil)
@@ -44,15 +40,23 @@
 (company-quickhelp-mode)
 (setq-default company-idle-delay 0.1)
 
-(define-key text-mode-map (kbd "C-j") 'company-select-next)
-(define-key text-mode-map (kbd "C-k") 'company-select-previous)
+;; Workaround way to add company completion keybindings, see https://github.com/syl20bnr/spacemacs/issues/2974
+(add-hook
+ 'company-completion-started-hook
+ (lambda (&rest ignore)
+   (when evil-mode
+     (when (evil-insert-state-p)
+       (define-key evil-insert-state-map (kbd "C-k") nil)))))
+(global-set-key (kbd "C-j") 'company-select-next)
+(global-set-key (kbd "C-k") 'company-select-previous)
 
 ;; Ivy config
+
 (straight-use-package 'ivy)
 (ivy-mode 1)
 
-;; (define-key ivy-mode-map (kbd "C-j") 'ivy-next-line)
-;; (define-key ivy-mode-map (kbd "C-k") 'ivy-previous-line)
+(define-key ivy-mode-map (kbd "C-j") 'ivy-next-line)
+(define-key ivy-mode-map (kbd "C-k") 'ivy-previous-line)
 
 ;; Projectile config
 (straight-use-package 'projectile)
