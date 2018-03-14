@@ -18,6 +18,13 @@
 (global-evil-leader-mode)
 (evil-leader/set-leader "<SPC>")
 
+;; Powerline config
+(straight-use-package 'powerline)
+(straight-use-package 'airline-themes)
+(require 'powerline)
+(require 'airline-themes)
+(load-theme 'airline-badwolf t)
+
 ;; Themes and colors config
 (load-theme 'peacock-contrast t)
 
@@ -27,6 +34,7 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
+(set-frame-font "Source Code Pro-11" t)
 
 ;; Emacs dashboard config
 (straight-use-package 'dashboard)
